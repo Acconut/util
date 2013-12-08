@@ -10,6 +10,6 @@
             "opera/latest",
             "safari/latest"
         ],
-        "html": "test/*.html"
+        "files": "test/*.html"
     }
 }
