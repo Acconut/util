@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+</head>
+<body>
+    
+    <div id="div-1"></div>
+    <input id="input">
+    
+    <div id="mocha"></div>
+    
+    <script src="../src/event.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.min.js"></script>
+    
+    <script>
+        
+        mocha.setup({
+            ui: "bdd",
+            reporter: location.hash == "#ui" ? "html" : "tap"
+        });
+        
+        function equals(a, b) {
+            if(a != b) throw "Not equal!\nExpected '" + a + "' but got '" + b + "'";
+        }
+        
+        describe("EventTarget", function() {
+            
+            var div = document.getElementById("div-1"),
+                input = document.getElementById("input");
+            
+            describe("#on", function() {
+                
+                it("should be available on it's instances", function() {
+                    if(!(div.on instanceof Function)) throw "Not a function"
+                });
+                
+                it("should add event listeners", function(done) {
+                    
+                    div.on("click", function(event) {
+                        equals(event.target, div);
+                        done();
+                    });
+                    
+                    div.click();
+                    
+                });
+                
+                it("shoud add multiple event listeners", function(done) {
+                    
+                    var num = 2;
+                    input.on(["click", "focus"], function(event) {
+                        console.log(event);
+                        equals(event.target, input);
+                        if(--num == 0) done();
+                    });
+                    
+                    input.click();
+                    input.focus();
+                    
+                });
+                
+            });
+            
+            describe("#off", function() {
+                
+                it("should be available on it's instances", function() {
+                    if(!(div.off instanceof Function)) throw "Not a function"
+                });
+                
+            });
+            
+        });
+        
+        mocha.run();
+    </script>
+</body>
+</html>
